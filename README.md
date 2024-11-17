@@ -1,24 +1,31 @@
-# README
+# Tripla's Good Night App
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is an application to let users track when do they go to bed or wake up.
 
-Things you may want to cover:
+The repository is part of tripla's technical test, the solution is created by **Ahmad Alangkibar<<alangkibar25@gmail.com>>**.
 
-* Ruby version
+## Requirements
 
-* System dependencies
+- Ruby 3.3.6
+- Rails 8.0.0
+- SQLite 3.4
 
-* Configuration
+## Initialization
 
-* Database creation
+### Prepare and Setup database
 
-* Database initialization
+```console
+$ rails db:setup
+```
 
-* How to run the test suite
+### Run Migration
 
-* Services (job queues, cache servers, search engines, etc.)
+```console
+$ rails db:migrate
+```
 
-* Deployment instructions
-
-* ...
+### Run Application
+```console
+$ rails s
+```
+The application will run using http://localhost:3000
