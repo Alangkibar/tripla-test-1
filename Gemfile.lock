@@ -315,9 +315,12 @@ DEPENDENCIES
   bootsnap
   brakeman
   debug
+  dotenv
   kamal
   puma (>= 5.0)
   rails (~> 8.0.0)
+  rubocop
+  rubocop-rails
   rubocop-rails-omakase
   solid_cable
   solid_cache
