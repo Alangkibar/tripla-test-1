@@ -1,4 +1,4 @@
-class FollowUserService < ApplicationService
+class UnfollowUserService < ApplicationService
   attr_reader :params
 
   def initialize(params)
@@ -13,18 +13,15 @@ class FollowUserService < ApplicationService
       followed = User.where(id: params[:followed_id]).first
       return { status: :not_found, message: "Followed ID is invalid" } unless followed.present?
 
-
       relation = UserFollowing.includes(:follower, :followed).where(follower_id: follower.id, followed_id: followed.id).first
 
-      if !relation
-        relation = UserFollowing.create(follower_id: follower.id, followed_id: followed.id)
-
-        return { status: :internal_server_error, message: "Failed to do action follow", error: relation.errors } unless relation.valid?
+      if relation
+        relation.really_destroy!
       end
 
       {
         status: :ok,
-        message: "#{follower.name} has been following #{followed.name}",
+        message: "#{follower.name} has been unfollowing #{followed.name}",
         data: relation
       }
     rescue Exception => e
