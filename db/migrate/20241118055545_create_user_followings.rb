@@ -1,4 +1,4 @@
-class CreateUserRelations < ActiveRecord::Migration[8.0]
+class CreateUserFollowings < ActiveRecord::Migration[8.0]
   def change
     create_table :user_followings do |t|
       t.references :follower, index: true
