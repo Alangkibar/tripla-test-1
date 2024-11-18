@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   namespace :v1 do
     scope "/users" do
+      post "/follow", to: "user#follow"
       post "/", to: "user#create"
       get "/", to: "user#list"
       delete "/:id", to: "user#delete"

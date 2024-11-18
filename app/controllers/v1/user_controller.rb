@@ -28,4 +28,23 @@ class V1::UserController < ApplicationController
 
     render json: response, status: response[:status]
   end
+
+  def follow
+    schema = FollowUserSchema.new
+    result = schema.call(
+      follower_id: params[:follower_id],
+      followed_id: params[:followed_id],
+    )
+
+    if result.success?
+      response = FollowUserService.call(params)
+
+      render json: response, status: response[:status]
+    else
+      render json: {
+        message: "Invalid payload",
+        errors: result.errors.to_h
+      }, status: :bad_request
+    end
+  end
 end
