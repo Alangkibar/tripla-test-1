@@ -22,4 +22,10 @@ class V1::UserController < ApplicationController
 
     render json: response, status: response[:status]
   end
+
+  def delete
+    response = DeleteUserService.call(params)
+
+    render json: response, status: response[:status]
+  end
 end

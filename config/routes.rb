@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     scope "/users" do
       post "/", to: "user#create"
       get "/", to: "user#list"
+      delete "/:id", to: "user#delete"
     end
   end
 end
