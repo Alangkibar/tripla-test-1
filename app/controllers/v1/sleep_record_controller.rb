@@ -16,4 +16,10 @@ class V1::SleepRecordController < ApplicationController
       }, status: :bad_request
     end
   end
+
+  def list
+    response = ListSleepRecordService.call(params)
+
+    render json: response, status: response[:status]
+  end
 end

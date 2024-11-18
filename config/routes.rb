@@ -17,8 +17,9 @@ Rails.application.routes.draw do
       delete "/:id", to: "user#delete"
     end
 
-    scope "/sleep-record" do
+    scope "/sleep-records" do
       post "/clock-in", to: "sleep_record#create"
+      get "/", to: "sleep_record#list"
     end
   end
 end
