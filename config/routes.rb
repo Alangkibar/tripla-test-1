@@ -7,4 +7,19 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  namespace :v1 do
+    scope "/users" do
+      post "/unfollow", to: "user#unfollow"
+      post "/follow", to: "user#follow"
+      post "/", to: "user#create"
+      get "/", to: "user#list"
+      delete "/:id", to: "user#delete"
+    end
+
+    scope "/sleep-records" do
+      post "/clock-in", to: "sleep_record#create"
+      get "/", to: "sleep_record#list"
+    end
+  end
 end
