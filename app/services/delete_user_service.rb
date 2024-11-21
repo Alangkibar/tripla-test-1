@@ -6,7 +6,7 @@ class DeleteUserService < ApplicationService
   end
 
   def call
-    begin
+    ActiveRecord::Base.transaction do
       user = User.where(id: params[:id]).first
 
       if !user
@@ -22,11 +22,18 @@ class DeleteUserService < ApplicationService
         status: :ok,
         message: "User deleted successfully"
       }
-    rescue Exception => e
-      {
-        status: :internal_server_error,
-        error: e.exception
-      }
     end
+  rescue ActiveRecord::StatementInvalid => e
+    Rails.logger.error("Database error during user creation: #{e.message}")
+    {
+      status: :internal_server_error,
+      error: "Database error occurred"
+    }
+  rescue StandardError => e
+    Rails.logger.error("An error occurred during user creation: #{e.message}")
+    {
+      status: :internal_server_error,
+      error: "An unexpected error occurred"
+    }
   end
 end

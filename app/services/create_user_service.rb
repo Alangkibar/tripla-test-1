@@ -6,21 +6,34 @@ class CreateUserService < ApplicationService
   end
 
   def call
-    begin
-      user = User.create(
-        name: params[:name]
-      )
+    ActiveRecord::Base.transaction do
+      user = User.new(name: params[:name])
 
-      {
-        status: :created,
-        message: "User created successfully",
-        data: user
-      }
-    rescue Exception => e
-      {
-        status: :internal_server_error,
-        error: e.exception
-      }
+      if user.save
+        {
+          status: :created,
+          message: "User created successfully",
+          data: user
+        }
+      else
+        Rails.logger.error("User creation failed: #{user.errors.full_messages.join(', ')}")
+        {
+          status: :unprocessable_entity,
+          error: user.errors.full_messages
+        }
+      end
     end
+  rescue ActiveRecord::StatementInvalid => e
+    Rails.logger.error("Database error during user creation: #{e.message}")
+    {
+      status: :internal_server_error,
+      error: "Database error occurred"
+    }
+  rescue StandardError => e
+    Rails.logger.error("An error occurred during user creation: #{e.message}")
+    {
+      status: :internal_server_error,
+      error: "An unexpected error occurred"
+    }
   end
 end

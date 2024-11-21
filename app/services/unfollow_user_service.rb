@@ -6,7 +6,7 @@ class UnfollowUserService < ApplicationService
   end
 
   def call
-    begin
+    ActiveRecord::Base.transaction do
       follower = User.where(id: params[:follower_id]).first
       return { status: :not_found, message: "Follower ID is invalid" } unless follower.present?
 
@@ -24,11 +24,18 @@ class UnfollowUserService < ApplicationService
         message: "#{follower.name} has been unfollowing #{followed.name}",
         data: relation
       }
-    rescue Exception => e
-      {
-        status: :internal_server_error,
-        error: e.exception
-      }
     end
+  rescue ActiveRecord::StatementInvalid => e
+    Rails.logger.error("Database error during user creation: #{e.message}")
+    {
+      status: :internal_server_error,
+      error: "Database error occurred"
+    }
+  rescue StandardError => e
+    Rails.logger.error("An error occurred during user creation: #{e.message}")
+    {
+      status: :internal_server_error,
+      error: "An unexpected error occurred"
+    }
   end
 end
