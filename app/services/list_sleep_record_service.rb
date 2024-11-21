@@ -17,7 +17,15 @@ class ListSleepRecordService < ApplicationService
 
       sleep_records = SleepRecord.includes(:user)
       sleep_records = sleep_records.where(user_id: user_followings << params.fetch(:user_id)) if params.fetch(:user_id).present?
-      sleep_records = sleep_records.page(page).per(per_page)
+      sleep_records = sleep_records.order(
+        Arel.sql(
+          "CASE
+             WHEN clock_out IS NULL THEN 1
+             ELSE 0
+           END,
+           COALESCE(clock_out - clock_in, INTERVAL '0 seconds') DESC"
+        )
+      ).page(page).per(per_page)
 
       records = []
       sleep_records.map do |sr|
